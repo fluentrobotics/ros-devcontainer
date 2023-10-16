@@ -82,12 +82,15 @@ To reduce the number of specification formats the user needs to learn, we will
 not be using Docker Compose. Everything that may typically go into `compose.yaml`
 will instead be specified as arguments to `docker run`.
 
-All containers will be ephemeral, meaning that all processes inside the
-container will be terminated immediately and without warning when the main shell
-session inside the container exits. **Important:** this applies even if you open
-a `tmux` session inside the container -- the `tmux` server itself will be
-terminated! **🚨DO NOT USE THIS CONFIGURATION AS-IS ON A ROBOT, ESPECIALLY VIA A
-REMOTE CONNECTION!🚨**
+> [!WARNING]
+> All containers will be ephemeral, meaning that all processes inside the
+> container will be terminated immediately and without warning when the main
+> shell session inside the container exits. This applies even if you open a
+> `tmux` session inside the container -- the `tmux` server itself will be
+> terminated!
+>
+> **🚨DO NOT USE THIS CONFIGURATION AS-IS ON A ROBOT, ESPECIALLY VIA
+> A REMOTE CONNECTION!🚨**
 
 We assume that this configuration will be used on a single-user machine. This
 reduces some engineering overhead as we won't have to consider how one user's
@@ -163,8 +166,9 @@ This message shows that your installation appears to be working correctly.
 
 See [`doc/ros-shell-environment.md`](doc/ros-shell-environment.md).
 
-The remaining steps assume you have followed the recommended instructions in the
-above document.
+> [!NOTE]
+> The remaining steps assume you have followed the recommended instructions in
+> the above document.
 
 ### Using ROS
 
@@ -269,8 +273,9 @@ RUN apt install --yes libgtsam-dev libgtsam-unstable-dev
 Adding these four lines to the end of the [`Dockerfile`](./Dockerfile) installs
 GTSAM when the Docker image is built.
 
-🔔 Remember to run `./build-image.sh` to rebuild the Docker image after making
-changes in the Dockerfile!
+> [!IMPORTANT]
+> Remember to run `./build-image.sh` to rebuild the Docker image after making
+> changes in the Dockerfile!
 
 More complex modifications will be available in the [`doc/`](doc/) folder in the
 future, including support for things like CUDA and audio applications while
