@@ -44,3 +44,12 @@ RUN apt-get update && apt-get install --yes \
     wget \
     zip \
     zsh
+
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install --yes \
+    python3.10 \
+    python3.10-distutils \
+    python3.10-venv
+
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/pypoetry python3.10 -
+RUN ln -s /usr/local/pypoetry/bin/* /usr/local/bin/
