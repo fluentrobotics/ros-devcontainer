@@ -62,6 +62,8 @@ identical to the result of running `nvidia-smi` on the host.
 
 ## Configuring the Container
 
+### Option 1: Most Workflows (e.g. PyTorch)
+
 In the [enter-container.sh](/enter-container.sh) script, uncomment the following
 lines in the `args` array:
 
@@ -72,3 +74,15 @@ lines in the `args` array:
 
 When you restart the container, you should be able to use your computer's NVIDIA
 GPUs.
+
+### Option 2: CUDA Development Workflows
+
+If your workflow needs CUDA Development tools such as `nvcc`, you can instead
+switch to the `cudnn8-devel` branch, which is built from a `nvidia/cuda` base
+image and enables the NVIDIA Runtime by default.
+
+```shell
+git switch cudnn8-devel
+
+./build-image.sh
+```
