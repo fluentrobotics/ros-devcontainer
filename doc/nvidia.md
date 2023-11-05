@@ -70,6 +70,7 @@ lines in the `args` array:
 ```bash
 --runtime=nvidia
 --gpus all
+--env NVIDIA_DRIVER_CAPABILITIES="all"
 ```
 
 When you restart the container, you should be able to use your computer's NVIDIA

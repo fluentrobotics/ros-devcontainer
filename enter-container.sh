@@ -29,6 +29,7 @@ args=(
     # These flags are needed for interactive shell sessions.
     --interactive
     --tty
+    --env TERM=xterm-256color
 
     # Setting the network option to "host" allows applications in the Docker
     # container (e.g., ROS) to access the network interfaces of the host system
@@ -50,15 +51,18 @@ args=(
     --env DISPLAY="$DISPLAY"
 
     # User spoofing (doc/user-spoofing.md)
+    --group-add="sudo"
     --user="$(id -u):$(id -g)"
     --volume="/etc/group:/etc/group:ro"
     --volume="/etc/passwd:/etc/passwd:ro"
+    --volume="/etc/shadow:/etc/shadow:ro"
     --volume="$HOME:$HOME"
     --workdir="$HOME"
 
     # Enable NVIDIA GPUs in the container (doc/nvidia.md)
     # --runtime=nvidia
     # --gpus all
+    # --env NVIDIA_DRIVER_CAPABILITIES="all"
 
     # The Docker image and command we want to run in the container always need
     # to be the last two arguments.
