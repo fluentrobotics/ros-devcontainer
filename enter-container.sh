@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 set -o errexit
+set -o nounset
 
 
-# This variable needs to be the same as the image name set in ./build-image.sh
-IMAGE_NAME="fluentrobotics/ros:noetic-desktop-gui"
+source ./env.sh
 
 
 # Check whether the Docker image is missing. `docker inspect` will exit with a
@@ -26,6 +26,8 @@ args=(
     # Tell Docker to delete the container immediately after we exit out of it.
     --rm
 
+    --name "$CONTAINER_NAME"
+
     # These flags are needed for interactive shell sessions.
     --interactive
     --tty
@@ -42,7 +44,7 @@ args=(
     # image we built. This is useful for quickly determining whether the active
     # terminal is tied to a shell session in this Docker container or a shell
     # session on the host.
-    --hostname="$IMAGE_NAME"
+    --hostname="$CONTAINER_NAME"
 
     # Settings for GUI applications (doc/gui-applications.md).
     --ipc=host
@@ -67,7 +69,16 @@ args=(
     # The Docker image and command we want to run in the container always need
     # to be the last two arguments.
     "$IMAGE_NAME"
-    bash
+    "$SHELL"
 )
 
-docker run "${args[@]}"
+# Check whether the container is running already.
+# https://stackoverflow.com/a/43723174
+if ! docker container inspect -f '{{.State.Running}}' "$CONTAINER_NAME" &> /dev/null; then
+    docker run "${args[@]}"
+else
+    # Warning: This shell will be killed when the main shell exits.
+    # TODO(elvout): Should we just detach the container? If we detach the
+    #   container, what is the correct behavior after the image is rebuilt?
+    docker exec --interactive --tty "$CONTAINER_NAME" "$SHELL"
+fi

@@ -9,9 +9,10 @@ Table of Contents
 - [Getting Started](#getting-started)
   - [Install Docker Engine](#install-docker-engine)
   - [Docker Engine Post-Installation Steps](#docker-engine-post-installation-steps)
+  - [Set Up NVIDIA Drivers (Optional)](#set-up-nvidia-drivers-optional)
   - [Set Up ROS Noetic In Your Shell Environment](#set-up-ros-noetic-in-your-shell-environment)
   - [Using ROS](#using-ros)
-  - [Making Changes](#making-changes)
+  - [Making Changes to the Dockerfile](#making-changes-to-the-dockerfile)
 - [Contributing](#contributing)
 
 ## Introduction
@@ -162,6 +163,10 @@ This message shows that your installation appears to be working correctly.
 
 [docker-postinstall]: https://docs.docker.com/engine/install/linux-postinstall/
 
+### Set Up NVIDIA Drivers (Optional)
+
+See [`doc/nvidia.md`](doc/nvidia.md).
+
 ### Set Up ROS Noetic In Your Shell Environment
 
 See [`doc/ros-shell-environment.md`](doc/ros-shell-environment.md).
@@ -190,11 +195,8 @@ host system. For example,
 your-username@your-computer-name:~$
 
 # While a shell in the Docker container would look like this:
-your-username@fluentrobotics/ros:noetic-desktop-gui:~$
+your-username@ros-noetic:~$
 ```
-
-If you find that a long hostname is cumbersome, you can customize the `--hostname`
-argument in [`./enter-container.sh`](./enter-container.sh).
 
 Once you're inside the Docker container, you can navigate around your home
 folder and begin to use ROS.
@@ -233,7 +235,7 @@ the image on the host system using this command:
 ./build-image.sh
 ```
 
-### Making Changes
+### Making Changes to the Dockerfile
 
 In this example, we're going to install [GTSAM](https://gtsam.org/) inside the
 Docker image. For convenience, we'll use the prebuilt packages that are

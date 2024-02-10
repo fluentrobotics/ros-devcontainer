@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 
 set -o errexit
+set -o nounset
 
 
-IMAGE_NAME="fluentrobotics/ros:noetic-desktop-gui"
-
+source ./env.sh
 
 docker build \
     --tag "$IMAGE_NAME" \
