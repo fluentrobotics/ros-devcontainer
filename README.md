@@ -279,10 +279,6 @@ GTSAM when the Docker image is built.
 > Remember to run `./build-image.sh` to rebuild the Docker image after making
 > changes in the Dockerfile!
 
-More complex modifications will be available in the [`doc/`](doc/) folder in the
-future, including support for things like CUDA and audio applications while
-inside the container.
-
 [gtsam-install]: https://gtsam.org/get_started/
 
 ## Contributing

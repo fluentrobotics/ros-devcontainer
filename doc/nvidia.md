@@ -79,11 +79,11 @@ GPUs.
 ### Option 2: CUDA Development Workflows
 
 If your workflow needs CUDA Development tools such as `nvcc`, you can instead
-switch to the `cudnn8-devel` branch, which is built from a `nvidia/cuda` base
-image and enables the NVIDIA Runtime by default.
+switch to one of the `*-cuXYZ` branches, which are built from `nvidia/cuda` base
+images and enable the NVIDIA Runtime by default.
 
 ```shell
-git switch cudnn8-devel
-
+# Example:
+git switch noetic-cu118
 ./build-image.sh
 ```
