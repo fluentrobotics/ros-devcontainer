@@ -1,0 +1,14 @@
+name: docker build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: ./build-image.sh
+      - name: List Docker images
+        run: docker images
