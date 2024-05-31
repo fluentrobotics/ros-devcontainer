@@ -2,16 +2,36 @@
 
 set -o errexit
 set -o nounset
+set -o pipefail
 
 
-source ./env.sh
+VALID_TAGS="$(basename --suffix=.Dockerfile ./*.Dockerfile | tr '\n' ' ')"
+function usage_error() {
+    echo "Usage: ${0} <TAG>"
+    echo "<TAG> is one of:" "${VALID_TAGS[@]}"
+    exit 1
+}
+
+if [[ $# != 1 ]]; then
+    usage_error
+fi
+
+IMAGE_TAG=$(basename --suffix=.Dockerfile "$1")
+
+if ! [[ " ${VALID_TAGS[*]} " =~ [[:space:]]${IMAGE_TAG}[[:space:]] ]]; then
+    echo "Invalid tag: '$1'"
+    usage_error
+fi
+
+IMAGE_NAME="fluentrobotics/ros:${IMAGE_TAG}"
+CONTAINER_NAME="ros-${IMAGE_TAG}"
 
 
 # Check whether the Docker image is missing. `docker inspect` will exit with a
 # non-zero code if the image does not exist.
 if ! docker inspect "$IMAGE_NAME" &> /dev/null ; then
     # Build the image before proceeding further.
-    ./build-image.sh
+    ./build-image.sh "$IMAGE_TAG"
 fi
 
 
