@@ -18,7 +18,9 @@ fi
 
 IMAGE_TAG=$(basename --suffix=.Dockerfile "$1")
 
-if ! [[ " ${VALID_TAGS[*]} " =~ [[:space:]]${IMAGE_TAG}[[:space:]] ]]; then
+# Check whether the user input (1) is a nonempty string and (2) matches one of
+# the valid tags.
+if ! [[ -n "${IMAGE_TAG}" && " ${VALID_TAGS[*]} " =~ [[:space:]]${IMAGE_TAG}[[:space:]] ]]; then
     echo "Invalid tag: '$1'"
     usage_error
 fi
