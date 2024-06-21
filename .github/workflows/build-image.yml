@@ -4,11 +4,15 @@ on: push
 
 jobs:
   build:
+    strategy:
+      matrix:
+        image: [humble, humble-cu118, noetic, noetic-cu118]
+
     runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
       - name: Build image
-        run: ./build-image.sh
+        run: ./build-image.sh ${{ matrix.image }}
       - name: List Docker images
         run: docker images
