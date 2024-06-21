@@ -32,3 +32,11 @@ docker build \
     --tag "$IMAGE_NAME" \
     --file "${IMAGE_TAG}.Dockerfile" \
     .
+
+
+for rcFile in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    if ! grep -q "^export ROS_DEVCONTAINER_UID=" "$rcFile"; then
+        echo "export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)" >> "$rcFile"
+        echo "Inserted \"export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)\" in $rcFile for vscode devcontainers"
+    fi
+done

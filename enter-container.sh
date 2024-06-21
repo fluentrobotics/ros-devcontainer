@@ -44,6 +44,7 @@ xhost +local:docker > /dev/null
 
 # Store the arguments to `docker run` in an array so we can add comments
 # explaining what the arguments mean. https://stackoverflow.com/a/9522766
+# Sync any changes here to runArgs in devcontainer.json
 args=(
     # Tell Docker to delete the container immediately after we exit out of it.
     --rm
