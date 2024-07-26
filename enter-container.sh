@@ -77,12 +77,15 @@ args=(
 
     # User spoofing (doc/user-spoofing.md)
     --group-add="sudo"
+    --group-add=107  # Required for pygame joystick, and string "input" doesn't seem to work so using number
     --user="$(id -u):$(id -g)"
     --volume="/etc/group:/etc/group:ro"
     --volume="/etc/passwd:/etc/passwd:ro"
     --volume="/etc/shadow:/etc/shadow:ro"
     --volume="$HOME:$HOME"
     --workdir="$HOME"
+
+    --privileged
 
     # Enable NVIDIA GPUs in the container (doc/nvidia.md)
     # --runtime=nvidia
