@@ -49,3 +49,16 @@ RUN apt-get update && apt-get install --yes \
 
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/pypoetry python3.10 -
 RUN ln -s /usr/local/pypoetry/bin/* /usr/local/bin/
+
+
+# Dependencies for building ompl from source
+RUN apt-get update && apt-get install -y \
+    # "common dependencies"
+    g++ cmake pkg-config libboost-serialization-dev libboost-filesystem-dev \
+    libboost-system-dev libboost-program-options-dev libboost-test-dev \
+    libeigen3-dev wget libyaml-cpp-dev \
+    # "python binding dependencies"
+    python3-dev python3-pip castxml libboost-python-dev libboost-numpy-dev \
+    python3-numpy pypy3
+
+RUN apt-get update && apt-get install -y joystick
