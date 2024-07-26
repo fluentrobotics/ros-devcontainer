@@ -1,21 +1,26 @@
-# ROS Noetic Docker Configuration
+# ROS/ROS 2 Docker Configuration
+
+> [!NOTE]
+> Documentation is currently work in progress following migration to ROS 2.
 
 Table of Contents
 
 - [Introduction](#introduction)
 - [Docker Jargon](#docker-jargon)
 - [Motivation](#motivation)
-- [Disclaimers and Major Limitations](#disclaimers-and-major-limitations)
+- [Limitations and Warnings](#limitations-and-warnings)
 - [Getting Started](#getting-started)
   - [Install Docker Engine](#install-docker-engine)
   - [Docker Engine Post-Installation Steps](#docker-engine-post-installation-steps)
-  - [Set Up NVIDIA Drivers (Optional)](#set-up-nvidia-drivers-optional)
+  - [Set Up NVIDIA Drivers (if applicable)](#set-up-nvidia-drivers-if-applicable)
   - [Set Up ROS Noetic In Your Shell Environment](#set-up-ros-noetic-in-your-shell-environment)
   - [Using ROS](#using-ros)
   - [Making Changes to the Dockerfile](#making-changes-to-the-dockerfile)
 - [Contributing](#contributing)
 
 ## Introduction
+
+Update: ROS versions are tied to OS versions, but there may be cases where you want to run some ROS version on a computer with a different OS; or you might just want to have an isolated ROS environment for development/testing.
 
 A lot of existing robotics infrastructure is built on ROS 1 Noetic, including
 the software running on our robots. If we're lucky, we can simply install Ubuntu
@@ -30,7 +35,7 @@ of Ubuntu\* _just works™_ on your hardware and you are okay with a moderate
 level of inconvenience in a terminal environment every time you need to use ROS
 Noetic or install some package for ROS.
 
-\*In particular, Ubuntu 22.04 LTS or one of the other [Ubuntu versions currently
+\*In particular, Ubuntu 22.04 LTS or one of the other x86_64 [Ubuntu versions currently
 supported by Docker][supported-ubuntu-versions].
 
 [supported-ubuntu-versions]: https://docs.docker.com/engine/install/ubuntu/#os-requirements
@@ -42,12 +47,13 @@ definitions throughout this document:
 
 - Host (system): The operating system that you see and log into when your
   computer boots up.
-- Dockerfile: A specification format and filename used by Docker.
-- (Docker) Image: A "file" that is built from a Dockerfile and executable by
-  Docker. Analogous to a VM snapshot or an executable program compiled from
-  source code.
-- (Docker) Container: A running instance of of a Docker image. Analogous to an
-  active VM or a running process.
+- Dockerfile: A specification format and source file used by Docker.
+- (Docker) Image: A filesystem that is built from a Dockerfile and "executable"
+  by Docker. Somewhat analogous to the filesystem on another computer or
+  partition.
+- (Docker) Container: A running instance of of a Docker image. It's using the
+  same hardware as the host, but you can kind of pretend this is a server that
+  you can connect to.
 
 For a more formal treatment, we direct you to Docker's official
 [glossary][glossary] and [overview][overview] or various blog posts and
@@ -60,7 +66,7 @@ tutorials about Docker on the Internet.
 
 The Open Source Robotics Foundation builds, maintains, and publishes Docker
 images for ROS. These images may already be sufficient for your use case. This
-goal of repository is to build upon the `osrf/ros:noetic-desktop-full` image to:
+goal of repository is to build upon the `osrf/ros:*-desktop-full` images to:
 
 - Install various commonly-used command-line development tools and utilities.
 - Enable GUI applications within the Docker container.
@@ -71,13 +77,10 @@ goal of repository is to build upon the `osrf/ros:noetic-desktop-full` image to:
 - Provide documentation/HOWTOs to help new Docker users figure out how to make
   modifications to this configuration for their specific use cases.
 
-Importantly, the last two points mean that **this configuration probably won't
-work for your use case as-is and you will need to make appropriate
-modifications!** There will only be one configuration -- one Dockerfile -- in
-each git branch at any given time. We may create additional git branches for
-commonly-used alternative (e.g., project-specific) configurations in the future.
+Importantly, the last two points mean that **this configuration may not work for
+your use case as-is and you will need to make appropriate modifications!**
 
-## Disclaimers and Major Limitations
+## Limitations and Warnings
 
 To reduce the number of specification formats the user needs to learn, we will
 not be using Docker Compose. Everything that may typically go into `compose.yaml`
@@ -94,18 +97,19 @@ will instead be specified as arguments to `docker run`.
 > A REMOTE CONNECTION!🚨**
 
 We assume that this configuration will be used on a single-user machine. This
-reduces some engineering overhead as we won't have to consider how one user's
-modifications to the Docker image affects all other potential users.
+reduces some engineering overhead as we won't have to consider multiple users
+running containers simultaneously or how one user's modifications to the Docker
+image affects all other users.
 
 We assume that the user does not require GUI applications or an X11 server when
 starting the Docker container remotely, e.g., over SSH.
 
-You may have used Docker before to provide isolation between software and the
-host system. This repository intentionally takes a very relaxed approach to
+Docker containers are often used to provide isolation between software and the
+host sytsem. This repository intentionally takes a very relaxed approach to
 security, breaking container isolation to create a more convenient development
 environment. In particular, please be advised that changes to many parts of the
 filesystem within the Docker container will be mapped directly and immediately
-back to the host filesystem. Additionally, any user granted the [`docker`
+back to the host filesystem. Additionally, any user added to the [`docker`
 group][docker-group] as part of the installation steps is effectively granted
 `root` access on the host.
 
@@ -115,16 +119,16 @@ group][docker-group] as part of the installation steps is effectively granted
 
 ### Install Docker Engine
 
-Before we provide a documentation link, note that the Docker documentation will
-try _very hard_ to have you install "Docker Desktop" instead, which essentially
-runs Docker Engine in a Linux virtual machine and is not necessary if you're
-already on Linux (which we are). If you've installed Docker Desktop (or already
-have it installed for some other application), the rest of the setup may still
-work, but we only test this repository with Docker Engine.
+Before clicking on the documentation link, note that the Docker documentation
+will try _very hard_ to have you install "Docker Desktop" instead, which
+essentially runs Docker Engine in a Linux virtual machine and is not necessary
+if you're already on Linux (which we are). If you've installed Docker Desktop
+(or already have it installed for some other application), the rest of the setup
+may still work, but we only test this repository with Docker Engine.
 
 In the linked page, ignore anything to do with Docker Desktop. You can find
-official instructions for installing the **latest version** of Docker Engine
-**using the Apt repository** [in this link][docker-engine-ubuntu].
+official instructions for installing Docker Engine **using the Apt repository**
+[in this link][docker-engine-ubuntu].
 
 [docker-engine-ubuntu]: https://docs.docker.com/engine/install/ubuntu
 
@@ -163,13 +167,19 @@ This message shows that your installation appears to be working correctly.
 
 [docker-postinstall]: https://docs.docker.com/engine/install/linux-postinstall/
 
-### Set Up NVIDIA Drivers (Optional)
+### Set Up NVIDIA Drivers (if applicable)
 
 See [`doc/nvidia.md`](doc/nvidia.md).
 
-### Set Up ROS Noetic In Your Shell Environment
+### Set Up ROS In Your Shell Environment
+
+ROS 1:
 
 See [`doc/ros-shell-environment.md`](doc/ros-shell-environment.md).
+
+ROS 2:
+
+make doc
 
 > [!NOTE]
 > The remaining steps assume you have followed the recommended instructions in
@@ -192,10 +202,10 @@ host system. For example,
 
 ```shell
 # A shell on your host system may look like this:
-your-username@your-computer-name:~$
+username@computer-name:~$
 
 # While a shell in the Docker container would look like this:
-your-username@ros-noetic:~$
+username@ros-noetic:~$
 ```
 
 Once you're inside the Docker container, you can navigate around your home
@@ -263,7 +273,7 @@ We'll make the following changes:
    will wait for the user to type "yes" in the terminal before actually
    installing anything. The `--yes` argument is built into `apt install` in case
    you want to specify confirmation ahead of time, e.g., if you're using an
-   automated install process.
+   automated or otherwise noninteractive install process.
 
 ```Dockerfile
 # Install GTSAM 4.x stable. (https://gtsam.org/get_started)

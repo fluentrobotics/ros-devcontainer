@@ -35,8 +35,10 @@ docker build \
 
 
 for rcFile in "$HOME/.bashrc" "$HOME/.zshrc"; do
+    # This environment variable is used in devcontainer.json and set here since
+    # we can't run shell commands in that file.
     if ! grep -q "^export ROS_DEVCONTAINER_UID=" "$rcFile"; then
         echo "export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)" >> "$rcFile"
-        echo "Inserted \"export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)\" in $rcFile for vscode devcontainers"
+        echo "Added \"export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)\" to $rcFile for vscode devcontainers"
     fi
 done
