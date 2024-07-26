@@ -1,13 +1,14 @@
 # Using NVIDIA GPUs in Docker
 
-This document outlines how to enable the CUDA runtime inside Docker for
-workflows that require the CUDA runtime on computers with NVIDIA GPUs.
+This document outlines how to enable the CUDA runtime inside Docker on computers
+with NVIDIA GPUs.
 
 ## Install NVIDIA Drivers on the Host System
 
-Follow the instructions from [Ubuntu][ubuntu-nvidia-install] to install NVIDIA
-Driver version `nvidia-driver-535` (the current stable version as of Oct. 2023)
-on the host Ubuntu.
+If NVIDIA drivers have not been installed yet, follow the instructions from
+[Ubuntu][ubuntu-nvidia-install] to install NVIDIA Driver version
+`nvidia-driver-535` (the current stable version as of Oct. 2023) on the host
+Ubuntu.
 
 Read through the section named "The recommended way (ubuntu-drivers tool)". The
 command that you end up running at the end should be:
@@ -62,8 +63,6 @@ identical to the result of running `nvidia-smi` on the host.
 
 ## Configuring the Container
 
-### Option 1: Most Workflows (e.g. PyTorch)
-
 In the [enter-container.sh](/enter-container.sh) script, uncomment the following
 lines in the `args` array:
 
@@ -73,17 +72,26 @@ lines in the `args` array:
 --env NVIDIA_DRIVER_CAPABILITIES="all"
 ```
 
-When you restart the container, you should be able to use your computer's NVIDIA
+If the container is currently running, it will need to be stopped for this
+change to take effect.
+
+```shell
+# Example
+docker stop -t 0 ros-noetic
+```
+
+### Option 1: Most Workflows (e.g. PyTorch)
+
+When you re-enter the container, you should be able to use your computer's NVIDIA
 GPUs.
 
 ### Option 2: CUDA Development Workflows
 
-If your workflow needs CUDA Development tools such as `nvcc`, you can instead
-switch to one of the `*-cuXYZ` branches, which are built from `nvidia/cuda` base
-images and enable the NVIDIA Runtime by default.
+If your workflow needs CUDA Development tools (e.g., compiling kernels), use one
+of the images that end in `-cuXYZ`.
 
 ```shell
-# Example:
-git switch noetic-cu118
-./build-image.sh
+# Example
+./build-image.sh noetic-cu118
+./enter-container.sh noetic-cu118
 ```
