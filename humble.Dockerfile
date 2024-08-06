@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install --yes \
     less \
     mesa-utils \
     net-tools \
+    parallel \
     rsync \
     software-properties-common \
     tmux \
