@@ -54,6 +54,7 @@ RUN apt-get update && apt-get install --yes \
     less \
     mesa-utils \
     net-tools \
+    parallel \
     rsync \
     software-properties-common \
     sudo \
@@ -62,8 +63,13 @@ RUN apt-get update && apt-get install --yes \
     unzip \
     usbutils \
     wget \
+    xxhash \
     zip \
-    zsh
+    zsh \
+    zstd
+
+# Install fonts for matplotlib
+RUN apt-get update && apt-get install -y fonts-urw-base35
 
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/pypoetry python3.10 -
 RUN ln -s /usr/local/pypoetry/bin/* /usr/local/bin/
