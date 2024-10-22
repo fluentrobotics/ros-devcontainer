@@ -19,7 +19,9 @@ RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o 
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 # ROS 2 Humble installation instructions recommend running apt upgrade
 RUN apt-get update && apt-get upgrade --yes && apt-get install --yes ros-humble-desktop-full
-RUN apt-get update && apt-get install --yes python3-colcon-common-extensions
+RUN apt-get update && apt-get install --yes \
+    python3-colcon-common-extensions \
+    python3-rosdep
 
 # Install commonly-used development tools.
 RUN apt-get update && apt-get install --yes \
