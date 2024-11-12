@@ -5,6 +5,7 @@ on:
   schedule:
     # Run every week on sunday at 4:15 UTC
     - cron: '15 4 * * 0'
+  workflow_dispatch:
 
 jobs:
   build:
