@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install --yes \
 # Install commonly-used Python tools.
 RUN apt-get update && apt-get install --yes \
     python-is-python3 \
-    python3-pip
+    python3-pip \
+    python3-venv
 RUN pip3 install --upgrade mypy virtualenv
 
 # Generate type stubs for rclpy using mypy
