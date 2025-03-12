@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install --yes \
     gdb \
     git \
     nano \
+    ninja-build \
     valgrind \
     vim
 
