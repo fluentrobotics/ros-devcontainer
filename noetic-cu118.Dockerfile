@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install --yes \
     python-is-python3 \
     python3-catkin-tools \
     python3-pip
-RUN pip3 install --upgrade virtualenv
+RUN pip3 install --upgrade uv virtualenv
 
 # Install commonly-used command-line tools.
 RUN apt-get update && apt-get install --yes \

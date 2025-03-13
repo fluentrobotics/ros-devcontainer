@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install --yes \
     python-is-python3 \
     python3-pip \
     python3-venv
-RUN pip3 install --upgrade mypy virtualenv
+RUN pip3 install --upgrade mypy uv virtualenv
 
 # Generate type stubs for rclpy using mypy
 RUN stubgen --include-docstrings \
