@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        image: [humble, humble-cu118, humble-cu124, noetic, noetic-cu118]
+        image: [jazzy, jazzy-cu128, humble, humble-cu118, humble-cu124, noetic, noetic-cu118]
 
     runs-on: ubuntu-latest
 
