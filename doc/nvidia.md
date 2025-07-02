@@ -45,7 +45,7 @@ Thu Mar 13 10:54:40 2025
 +-----------------------------------------------------------------------------------------+
 ```
 
-[ubuntu-nvidia-install]: https://ubuntu.com/server/docs/nvidia-drivers-installation
+[ubuntu-nvidia-install]: https://documentation.ubuntu.com/server/how-to/graphics/install-nvidia-drivers
 
 ## Install the `nvidia-container-toolkit`
 
