@@ -1,4 +1,3 @@
-
 FROM osrf/ros:humble-desktop-full
 
 ARG DEBIAN_FRONTEND=noninteractive

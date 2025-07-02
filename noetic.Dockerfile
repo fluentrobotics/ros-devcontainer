@@ -1,4 +1,3 @@
-
 FROM osrf/ros:noetic-desktop-full
 
 ARG DEBIAN_FRONTEND=noninteractive
