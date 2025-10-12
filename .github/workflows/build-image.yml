@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         image: [jazzy, jazzy-cu128, humble, humble-cu118, humble-cu124, noetic, noetic-cu118]
+      fail-fast: false
 
     runs-on: ubuntu-latest
 
