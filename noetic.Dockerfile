@@ -24,7 +24,8 @@ RUN update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/cl
 RUN apt-get update && apt-get install --yes \
     python-is-python3 \
     python3-catkin-tools \
-    python3-pip
+    python3-pip \
+    python3.9
 RUN pip3 install --upgrade uv virtualenv
 
 # Install commonly-used command-line tools.
@@ -45,16 +46,5 @@ RUN apt-get update && apt-get install --yes \
     zip \
     zsh
 
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install --yes \
-    python3.9 \
-    python3.9-dev \
-    python3.9-distutils \
-    python3.9-venv \
-    python3.10 \
-    python3.10-dev \
-    python3.10-distutils \
-    python3.10-venv
-
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/pypoetry python3.10 -
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local/pypoetry python3.9 -
 RUN ln -s /usr/local/pypoetry/bin/* /usr/local/bin/
