@@ -7,13 +7,13 @@ with NVIDIA GPUs.
 
 If NVIDIA drivers have not been installed yet, follow the instructions from
 [Ubuntu][ubuntu-nvidia-install] to install the latest stable NVIDIA Driver
-version (`nvidia-driver-550` as of Mar. 2025) on the host Ubuntu.
+version (`nvidia-driver-570` as of Oct. 2025) on the host Ubuntu.
 
 Read through the section named "The recommended way (ubuntu-drivers tool)". The
 command that you end up running at the end should be:
 
 ```shell
-sudo ubuntu-drivers install nvidia:550
+sudo ubuntu-drivers install nvidia:570
 ```
 
 After the drivers are done installing on the host (this might take some time and
@@ -22,30 +22,28 @@ terminal to obtain output that resembles below:
 
 ```shell
 $ nvidia-smi
-Thu Mar 13 10:54:40 2025
+Thu Oct 23 23:42:39 2025
 +-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 550.120                Driver Version: 550.120        CUDA Version: 12.4     |
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
 |-----------------------------------------+------------------------+----------------------+
 | GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
 | Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
 |   0  NVIDIA GeForce RTX 4090        Off |   00000000:01:00.0 Off |                  Off |
-|  0%   44C    P8             14W /  450W |      31MiB /  24564MiB |      0%      Default |
+|  0%   37C    P8              7W /  450W |      40MiB /  24564MiB |      0%      Default |
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
 
 +-----------------------------------------------------------------------------------------+
 | Processes:                                                                              |
-|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
 |        ID   ID                                                               Usage      |
 |=========================================================================================|
-|    0   N/A  N/A      9067      G   /usr/lib/xorg/Xorg                              9MiB |
-|    0   N/A  N/A      9119      G   /usr/bin/gnome-shell                           10MiB |
 +-----------------------------------------------------------------------------------------+
 ```
 
-[ubuntu-nvidia-install]: https://documentation.ubuntu.com/server/how-to/graphics/install-nvidia-drivers
+[ubuntu-nvidia-install]: https://documentation.ubuntu.com/server/how-to/graphics/install-nvidia-drivers/
 
 ## Install the `nvidia-container-toolkit`
 
@@ -62,7 +60,7 @@ identical to the result of running `nvidia-smi` on the host.
 
 ## Configuring the Container
 
-In the [enter-container.sh](/enter-container.sh) script, uncomment the following
+In the [enter-container.sh](../enter-container.sh) script, uncomment the following
 lines in the `args` array:
 
 ```bash
