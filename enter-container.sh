@@ -91,14 +91,19 @@ args=(
     --volume="/etc/shadow:/etc/shadow:ro"
     --volume="$HOME:$HOME"
     --workdir="$HOME"
+)
 
-    # Enable NVIDIA GPUs in the container (doc/nvidia.md)
-    # --runtime=nvidia
-    # --gpus all
-    # --env NVIDIA_DRIVER_CAPABILITIES="all"
+# Enable NVIDIA GPUs in the container (doc/nvidia.md)
+if docker info --format '{{json .Runtimes}}' | grep -q '"nvidia"'; then
+    args+=(
+        --runtime nvidia
+        --gpus all
+        --env NVIDIA_DRIVER_CAPABILITIES="all"
+    )
+fi
 
-    # The Docker image and command we want to run in the container always need
-    # to be the last two arguments.
+# The image must come after other run args.
+args+=(
     "$IMAGE_NAME"
     "$SHELL"
 )

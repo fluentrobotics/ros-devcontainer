@@ -59,35 +59,23 @@ identical to the result of running `nvidia-smi` on the host.
 
 ## Configuring the Container
 
-In the [enter-container.sh](../enter-container.sh) script, uncomment the following
-lines in the `args` array:
-
-```bash
---runtime=nvidia
---gpus all
---env NVIDIA_DRIVER_CAPABILITIES="all"
-```
+[enter-container.sh](../enter-container.sh) will automatically use the nvidia
+runtime after installation.
 
 If the container is currently running, it will need to be stopped for this
 change to take effect.
 
 ```shell
 # Example
-docker stop -t 0 ros-noetic
+docker stop -t 0 username-ros-jazzy
 ```
 
-### Option 1: Most Workflows (e.g. PyTorch)
-
-When you re-enter the container, you should be able to use your computer's NVIDIA
-GPUs.
-
-### Option 2: CUDA Development Workflows
-
-If your workflow needs CUDA Development tools (e.g., compiling kernels), use one
-of the images that end in `-cuXYZ`.
+This should be sufficient for most workflows (e.g., PyTorch). However, if your
+workflow needs CUDA Development tools (e.g., `nvcc`), use one of the images
+ending in `-cuXYZ`.
 
 ```shell
 # Example
-./build-image.sh noetic-cu118
-./enter-container.sh noetic-cu118
+./build-image.sh jazzy-cu128
+./enter-container.sh jazzy-cu128
 ```
