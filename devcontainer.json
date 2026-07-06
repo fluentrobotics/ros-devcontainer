@@ -23,6 +23,12 @@
         "--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro",
         "--volume=/dev/dri:/dev/dri:ro",
         "--volume=${localEnv:HOME}:${localEnv:HOME}",
+        // Codex sandboxing
+        // If codex still fails to read files and use apply_patch, check
+        // sysctl kernel.unprivileged_userns_clone  # (should be 1)
+        // sysctl kernel.apparmor_restrict_unprivileged_userns  # (should be 0)
+        "--security-opt=apparmor=unconfined",
+        "--security-opt=seccomp=unconfined",
         // "--runtime=nvidia",
         // "--gpus=all",
     ],
