@@ -7,13 +7,13 @@ with NVIDIA GPUs.
 
 If NVIDIA drivers have not been installed yet, follow the instructions from
 [Ubuntu][ubuntu-nvidia-install] to install the latest stable NVIDIA Driver
-version (`nvidia-driver-570` as of Oct. 2025) on the host Ubuntu.
+version (`nvidia-driver-580` as of Jul. 2025) on the host Ubuntu.
 
 Read through the section named "The recommended way (ubuntu-drivers tool)". The
-command that you end up running at the end should be:
+command that you end up running should be:
 
 ```shell
-sudo ubuntu-drivers install nvidia:570
+sudo ubuntu-drivers install nvidia:580
 ```
 
 After the drivers are done installing on the host (this might take some time and
@@ -22,16 +22,15 @@ terminal to obtain output that resembles below:
 
 ```shell
 $ nvidia-smi
-Thu Oct 23 23:42:39 2025
 +-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
-|-----------------------------------------+------------------------+----------------------+
+| NVIDIA-SMI 580.159.03             Driver Version: 580.159.03     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
 | GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
 | Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
-|   0  NVIDIA GeForce RTX 4090        Off |   00000000:01:00.0 Off |                  Off |
-|  0%   37C    P8              7W /  450W |      40MiB /  24564MiB |      0%      Default |
+|   0  NVIDIA GeForce RTX 4090        Off |   00000000:01:00.0  On |                  Off |
+|  0%   38C    P8             12W /  450W |     207MiB /  24564MiB |      0%      Default |
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
 
@@ -43,7 +42,7 @@ Thu Oct 23 23:42:39 2025
 +-----------------------------------------------------------------------------------------+
 ```
 
-[ubuntu-nvidia-install]: https://documentation.ubuntu.com/server/how-to/graphics/install-nvidia-drivers/
+[ubuntu-nvidia-install]: https://ubuntu.com/server/docs/how-to/graphics/install-nvidia-drivers/
 
 ## Install the `nvidia-container-toolkit`
 
