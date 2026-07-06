@@ -27,6 +27,7 @@ RUN pip3 install --break-system-packages --upgrade uv
 # Install commonly-used command-line tools.
 RUN apt-get update && apt-get install --yes \
     curl \
+    ffmpeg \
     iproute2 \
     iputils-ping \
     less \
