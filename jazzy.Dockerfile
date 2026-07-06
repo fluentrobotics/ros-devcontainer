@@ -46,5 +46,14 @@ RUN apt-get update && apt-get install --yes \
     zsh \
     zstd
 
-# Install fonts for matplotlib
-RUN apt-get update && apt-get install -y fonts-urw-base35
+# "Nimbus Roman" font for IEEE LaTeX figures.
+RUN apt-get update && apt-get install --yes fonts-urw-base35
+
+# Neobotix + UR workflows
+RUN apt-get update && apt-get install --yes \
+    ros-jazzy-cyclonedds \
+    ros-jazzy-rmw-cyclonedds-cpp \
+    "ros-jazzy-ur-*" \
+    ros-jazzy-ros2controlcli \
+    ros-jazzy-moveit \
+    ros-jazzy-rosbridge-suite
