@@ -50,8 +50,11 @@ xhost +local:docker > /dev/null
 # explaining what the arguments mean. https://stackoverflow.com/a/9522766
 # Sync any changes here to devcontainer.json
 args=(
-    # Tell Docker to delete the container immediately after we exit out of it.
+    # Delete the container after it is shut down.
     --rm
+
+    # Keep the container alive in the background.
+    --detach
 
     --name "$CONTAINER_NAME"
 
@@ -103,10 +106,7 @@ args=(
 # Check whether the container is running already.
 # https://stackoverflow.com/a/43723174
 if ! docker container inspect -f '{{.State.Running}}' "$CONTAINER_NAME" &> /dev/null; then
-    docker run "${args[@]}"
-else
-    # Warning: This shell will be killed when the main shell exits.
-    # TODO(elvout): Should we just detach the container? If we detach the
-    #   container, what is the correct behavior after the image is rebuilt?
-    docker exec --interactive --tty "$CONTAINER_NAME" "$SHELL"
+    docker run "${args[@]}" > /dev/null
 fi
+
+docker exec --interactive --tty "$CONTAINER_NAME" "$SHELL"
