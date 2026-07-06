@@ -1,31 +1,30 @@
-// From https://github.com/fluentrobotics/ros-devcontainer
+// Copy this file to $YOUR_WORKSPACE/.devcontainer/devcontainer.json
 {
-    "name": "ros-SET_THIS_TEMPLATE_PLACEHOLDER_VALUE_APPROPRIATELY",
-    // The following image needs to be built from the ros-devcontainer
-    // repository.
-    "image": "fluentrobotics/ros:SET_THIS_TEMPLATE_PLACEHOLDER_VALUE_APPROPRIATELY",
+    "name": "ros-jazzy",
+    // The following image needs to be built from the
+    // https://github.com/fluentrobotics/ros-devcontainer repository.
+    "image": "${localEnv:USER}/ros:jazzy",
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": true,
     // The following runtime arguments are adapted from the `enter-container.sh`
     // script in the ros-devcontainer repository.
+    "containerEnv": {
+        "TERM": "xterm-256color",
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "HOME": "${localEnv:HOME}",
+        "NVIDIA_DRIVER_CAPABILITIES": "all",
+        "SHELL": "${localEnv:SHELL}"
+    },
     "runArgs": [
-        "--rm",
-        "--interactive",
-        "--tty",
-        "--env=TERM=xterm-256color",
         "--network=host",
-        "--hostname=ros-SET_THIS_TEMPLATE_PLACEHOLDER_VALUE_APPROPRIATELY",
+        "--add-host=${localEnv:USER}-ros-jazzy:127.0.1.1",
+        "--hostname=${localEnv:USER}-ros-jazzy",
         "--ipc=host",
         "--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro",
         "--volume=/dev/dri:/dev/dri:ro",
-        "--env=DISPLAY=${localEnv:DISPLAY}",
-        "--group-add=sudo",
-        "--user=${localEnv:ROS_DEVCONTAINER_UID}",
-        "--volume=/etc/group:/etc/group:ro",
-        "--volume=/etc/passwd:/etc/passwd:ro",
-        "--volume=/etc/shadow:/etc/shadow:ro",
         "--volume=${localEnv:HOME}:${localEnv:HOME}",
         // "--runtime=nvidia",
         // "--gpus=all",
-        // "--env=NVIDIA_DRIVER_CAPABILITIES=all",
     ],
     // Since we're mounting the whole user directory, we can work directly in
     // the local user workspace path.

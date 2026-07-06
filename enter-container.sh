@@ -25,8 +25,12 @@ if ! [[ -n "${IMAGE_TAG}" && " ${VALID_TAGS[*]} " =~ [[:space:]]${IMAGE_TAG}[[:s
     usage_error
 fi
 
-IMAGE_NAME="fluentrobotics/ros:${IMAGE_TAG}"
-CONTAINER_NAME="ros-${IMAGE_TAG}"
+IMAGE_NAME="$(id --user --name)/ros:${IMAGE_TAG}"
+# NOTE: This is also used as the container hostname, so we expect a normal
+# lowercase alpha username here. We'll skip sanitization for script readability,
+# but if you're an insane person who puts underscores in your username, it might
+# break the container.
+CONTAINER_NAME="$(id --user --name)-ros-${IMAGE_TAG}"
 
 
 # Check whether the Docker image is missing. `docker inspect` will exit with a
@@ -44,7 +48,7 @@ xhost +local:docker > /dev/null
 
 # Store the arguments to `docker run` in an array so we can add comments
 # explaining what the arguments mean. https://stackoverflow.com/a/9522766
-# Sync any changes here to runArgs in devcontainer.json
+# Sync any changes here to devcontainer.json
 args=(
     # Tell Docker to delete the container immediately after we exit out of it.
     --rm
@@ -67,6 +71,7 @@ args=(
     # image we built. This is useful for quickly determining whether the active
     # terminal is tied to a shell session in this Docker container or a shell
     # session on the host.
+    --add-host="$CONTAINER_NAME:127.0.1.1"
     --hostname="$CONTAINER_NAME"
 
     # Settings for GUI applications (doc/gui-applications.md).
@@ -75,7 +80,7 @@ args=(
     --volume="/dev/dri:/dev/dri:ro"
     --env DISPLAY="$DISPLAY"
 
-    # User spoofing (doc/user-spoofing.md)
+    # User spoofing
     --group-add="sudo"
     --user="$(id -u):$(id -g)"
     --volume="/etc/group:/etc/group:ro"

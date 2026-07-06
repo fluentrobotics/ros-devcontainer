@@ -25,20 +25,10 @@ if ! [[ -n "${IMAGE_TAG}" && " ${VALID_TAGS[*]} " =~ [[:space:]]${IMAGE_TAG}[[:s
     usage_error
 fi
 
-IMAGE_NAME="fluentrobotics/ros:${IMAGE_TAG}"
+IMAGE_NAME="$(id --user --name)/ros:${IMAGE_TAG}"
 
 
 docker build \
     --tag "$IMAGE_NAME" \
     --file "${IMAGE_TAG}.Dockerfile" \
     .
-
-
-for rcFile in "$HOME/.bashrc" "$HOME/.zshrc"; do
-    # This environment variable is used in devcontainer.json and set here since
-    # we can't run shell commands in that file.
-    if ! grep -q "^export ROS_DEVCONTAINER_UID=" "$rcFile"; then
-        echo "export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)" >> "$rcFile"
-        echo "Added \"export ROS_DEVCONTAINER_UID=$(id -u):$(id -g)\" to $rcFile for vscode devcontainers"
-    fi
-done
