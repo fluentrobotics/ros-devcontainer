@@ -7,7 +7,7 @@ with NVIDIA GPUs.
 
 If NVIDIA drivers have not been installed yet, follow the instructions from
 [Ubuntu][ubuntu-nvidia-install] to install the latest stable NVIDIA Driver
-version (`nvidia-driver-580` as of Jul. 2025) on the host Ubuntu.
+version (`nvidia-driver-580` as of Jul. 2026) on the host.
 
 Read through the section named "The recommended way (ubuntu-drivers tool)". The
 command that you end up running should be:

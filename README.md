@@ -1,301 +1,46 @@
-# ROS/ROS 2 Docker Configuration
+# ROS 2 Docker + Devcontainer Environment
 
-> [!NOTE]
-> Documentation is currently work in progress following migration to ROS 2.
-
-Table of Contents
-
-- [Introduction](#introduction)
-- [Docker Jargon](#docker-jargon)
-- [Motivation](#motivation)
-- [Limitations and Warnings](#limitations-and-warnings)
-- [Getting Started](#getting-started)
-  - [Install Docker Engine](#install-docker-engine)
-  - [Docker Engine Post-Installation Steps](#docker-engine-post-installation-steps)
-  - [Set Up NVIDIA Drivers (if applicable)](#set-up-nvidia-drivers-if-applicable)
-  - [Set Up ROS Noetic In Your Shell Environment](#set-up-ros-noetic-in-your-shell-environment)
-  - [Using ROS](#using-ros)
-  - [Making Changes to the Dockerfile](#making-changes-to-the-dockerfile)
-- [Contributing](#contributing)
-
-## Introduction
-
-Update: ROS versions are tied to OS versions, but there may be cases where you want to run some ROS version on a computer with a different OS; or you might just want to have an isolated ROS environment for development/testing.
-
-A lot of existing robotics infrastructure is built on ROS 1 Noetic, including
-the software running on our robots. If we're lucky, we can simply install Ubuntu
-20.04 and ROS Noetic on our personal or lab computer and we'll have an
-environment that we can develop and run programs in. However, nowadays it's
-possible that your computer's hardware is "too new" for Ubuntu 20.04, and you
-may encounter hardware/driver issues (e.g., wifi, bluetooth, graphics). This
-problem can probably be solved by finding and backporting appropriate drivers
-and/or compiling a newer kernel, but these tasks can be challenging. This Docker
-configuration serves an alternative solution, provided that some newer version
-of Ubuntu\* _just works™_ on your hardware and you are okay with a moderate
-level of inconvenience in a terminal environment every time you need to use ROS
-Noetic or install some package for ROS.
-
-\*In particular, Ubuntu 22.04 LTS or one of the other x86_64 [Ubuntu versions currently
-supported by Docker][supported-ubuntu-versions].
-
-[supported-ubuntu-versions]: https://docs.docker.com/engine/install/ubuntu/#os-requirements
-
-## Docker Jargon
-
-If you're relatively new to Docker, we will use the following terms and informal
-definitions throughout this document:
-
-- Host (system): The operating system that you see and log into when your
-  computer boots up.
-- Dockerfile: A specification format and source file used by Docker.
-- (Docker) Image: A filesystem that is built from a Dockerfile and "executable"
-  by Docker. Somewhat analogous to the filesystem on another computer or
-  partition.
-- (Docker) Container: A running instance of of a Docker image. It's using the
-  same hardware as the host, but you can kind of pretend this is a server that
-  you can connect to.
-
-For a more formal treatment, we direct you to Docker's official
-[glossary][glossary] and [overview][overview] or various blog posts and
-tutorials about Docker on the Internet.
-
-[glossary]: https://docs.docker.com/glossary/
-[overview]: https://docs.docker.com/get-started/overview/
-
-## Motivation
-
-The Open Source Robotics Foundation builds, maintains, and publishes Docker
-images for ROS. These images may already be sufficient for your use case. This
-goal of repository is to build upon the `osrf/ros:*-desktop-full` images to:
+This repository builds upon the official `osrf/ros` images to
 
 - Install various commonly-used command-line development tools and utilities.
-- Enable GUI applications within the Docker container.
-- Provide a shell environment in the Docker container that is as close as
-  possible to the shell environment on the host.
-- Provide a relatively simple configuration that is easy to understand for new
-  Docker users.
-- Provide documentation/HOWTOs to help new Docker users figure out how to make
-  modifications to this configuration for their specific use cases.
+- Support GUI applications.
+- Provide low-friction development and shell environments.
 
-Importantly, the last two points mean that **this configuration may not work for
-your use case as-is and you will need to make appropriate modifications!**
-
-## Limitations and Warnings
-
-To reduce the number of specification formats the user needs to learn, we will
-not be using Docker Compose. Everything that may typically go into `compose.yaml`
-will instead be specified as arguments to `docker run`.
-
-> [!WARNING]
-> All containers will be ephemeral, meaning that all processes inside the
-> container will be terminated immediately and without warning when the main
-> shell session inside the container exits. This applies even if you open a
-> `tmux` session inside the container -- the `tmux` server itself will be
-> terminated!
->
-> **🚨DO NOT USE THIS CONFIGURATION AS-IS ON A ROBOT, ESPECIALLY VIA
-> A REMOTE CONNECTION!🚨**
-
-We assume that this configuration will be used on a single-user machine. This
-reduces some engineering overhead as we won't have to consider multiple users
-running containers simultaneously or how one user's modifications to the Docker
-image affects all other users.
-
-We assume that the user does not require GUI applications or an X11 server when
-starting the Docker container remotely, e.g., over SSH.
-
-Docker containers are often used to provide isolation between software and the
-host sytsem. This repository intentionally takes a very relaxed approach to
-security, breaking container isolation to create a more convenient development
-environment. In particular, please be advised that changes to many parts of the
-filesystem within the Docker container will be mapped directly and immediately
-back to the host filesystem. Additionally, any user added to the [`docker`
-group][docker-group] as part of the installation steps is effectively granted
-`root` access on the host.
-
-[docker-group]: https://docs.docker.com/engine/install/linux-postinstall/
+> [!IMPORTANT]
+> This repository assumes you are already familiar with Docker. A relaxed
+> approach to security is adopted for dev environment conveniences (e.g.,
+> filesystem, device, user mapping). The container user is effectively a root
+> user on the host. Use agentic tools at your own risk.
 
 ## Getting Started
 
-### Install Docker Engine
+This repository is regularly used with rootful Docker on an Ubuntu host.
+Rootless Docker or Podman may require additional configuration.
 
-Before clicking on the documentation link, note that the Docker documentation
-will try _very hard_ to have you install "Docker Desktop" instead, which
-essentially runs Docker Engine in a Linux virtual machine and is not necessary
-if you're already on Linux (which we are). If you've installed Docker Desktop
-(or already have it installed for some other application), the rest of the setup
-may still work, but we only test this repository with Docker Engine.
+If not done already,
 
-In the linked page, ignore anything to do with Docker Desktop. You can find
-official instructions for installing Docker Engine **using the Apt repository**
-[in this link][docker-engine-ubuntu].
+- Install [Docker Engine][docker-engine-ubuntu]
+- Follow [Post-Installation steps][docker-postinstall]
+- Set up [NVIDIA drivers and container toolkit](/doc/nvidia.md) if applicable
+
+Using `jazzy` as an example,
+
+- Build an image: `./build-image.sh jazzy`
+
+For shell tasks,
+
+- Enter a shell in the container: `./enter-container.sh jazzy`
+
+For vscode,
+
+- Install the `Dev Containers` extension
+- Copy [devcontainer.json](/devcontainer.json) to
+  `.devcontainer/devcontainer.json` in your workspace.
+- A popup will probably appear in the bottom right to use the devcontainer. In
+  general, you can also open the command palette and use "Dev Containers:
+  Rebuild and Reopen in Container".
+- You should then be able to open the repository directly in the devcontainer in
+  the "Open Recent" menu.
 
 [docker-engine-ubuntu]: https://docs.docker.com/engine/install/ubuntu
-
-### Docker Engine Post-Installation Steps
-
-Adapted from the [official documentation][docker-postinstall].
-
-It is very likely that most `docker` commands will print out a "permission
-denied" error right after installation:
-
-```shell
-$ docker run --rm hello-world
-permission denied while trying to connect to the Docker daemon socket at
-unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/images/json":
-dial unix /var/run/docker.sock: connect: permission denied
-```
-
-This is expected behavior. To grant permissions non-root users (this includes
-yourself), run the following commands in a terminal. You may be prompted for
-your password.
-
-- `sudo groupadd docker`
-- `sudo usermod -aG docker $USER`
-
-You'll then need to log out and log back in. Afterwards, you should be able
-to use `docker` commands.
-
-```shell
-# Note: truncated output
-$ docker run --rm hello-world
-...
-Hello from Docker!
-This message shows that your installation appears to be working correctly.
-...
-```
-
 [docker-postinstall]: https://docs.docker.com/engine/install/linux-postinstall/
-
-### Set Up NVIDIA Drivers (if applicable)
-
-See [`doc/nvidia.md`](doc/nvidia.md).
-
-### Set Up ROS In Your Shell Environment
-
-ROS 1:
-
-See [`doc/ros-shell-environment.md`](doc/ros-shell-environment.md).
-
-ROS 2:
-
-make doc
-
-> [!NOTE]
-> The remaining steps assume you have followed the recommended instructions in
-> the above document.
-
-### Using ROS
-
-When you run this command for the first time, it will build a Docker image from
-the [`Dockerfile`](./Dockerfile), which may take a good amount of time depending
-on your internet connection. Afterwards, it will drop you into a shell inside of
-an ephemeral container.
-
-```shell
-./enter-container.sh
-```
-
-Your shell may be configured to display the current hostname, which is useful
-for determining whether you are currently looking at the Docker container or the
-host system. For example,
-
-```shell
-# A shell on your host system may look like this:
-username@computer-name:~$
-
-# While a shell in the Docker container would look like this:
-username@ros-noetic:~$
-```
-
-Once you're inside the Docker container, you can navigate around your home
-folder and begin to use ROS.
-
-``` shell
-$ pwd
-/home/your-username
-
-$ ls
-... # Files in your home directory
-
-# Launch roscore in the background.
-$ roscore &
-
-# Press enter until you see the shell prompt again.
-$
-
-$ rostopic list
-/rosout
-/rosout_agg
-
-# Launch rviz in the background.
-# rviz should open a GUI window that you can interact with.
-$ rviz &
-```
-
-You can exit the container using the `exit` command or with the shortcut
-`Control-D`.
-
-Subsequent invocations of [`./enter-container.sh`](./enter-container.sh) will
-use the Docker image that was built at some point in the past. Whenever you make
-changes to the [`Dockerfile`](./Dockerfile), you will need to manually rebuild
-the image on the host system using this command:
-
-```shell
-./build-image.sh
-```
-
-### Making Changes to the Dockerfile
-
-In this example, we're going to install [GTSAM](https://gtsam.org/) inside the
-Docker image. For convenience, we'll use the prebuilt packages that are
-published by the authors.
-
-The authors provide installation instructions [here][gtsam-install] (Install
-GTSAM from Ubuntu PPA; stable release) that look like this if we were to run
-them on a Ubuntu 20.04 host. We need to modify them slightly so they'll work in
-the [`Dockerfile`](./Dockerfile).
-
-```shell
-# Add PPA
-sudo add-apt-repository ppa:borglab/gtsam-release-4.0
-sudo apt update  # not necessary since Bionic
-# Install:
-sudo apt install libgtsam-dev libgtsam-unstable-dev
-```
-
-We'll make the following changes:
-
-1. Prepend `RUN` to all the commands.
-2. Drop `sudo` from the commands. All commands run as the `root` user in a
-   Dockerfile by default.
-3. Add the `--yes` argument to the `apt install` command. Usually `apt install`
-   will wait for the user to type "yes" in the terminal before actually
-   installing anything. The `--yes` argument is built into `apt install` in case
-   you want to specify confirmation ahead of time, e.g., if you're using an
-   automated or otherwise noninteractive install process.
-
-```Dockerfile
-# Install GTSAM 4.x stable. (https://gtsam.org/get_started)
-RUN add-apt-repository ppa:borglab/gtsam-release-4.0
-RUN apt update
-RUN apt install --yes libgtsam-dev libgtsam-unstable-dev
-```
-
-Adding these four lines to the end of the [`Dockerfile`](./Dockerfile) installs
-GTSAM when the Docker image is built.
-
-> [!IMPORTANT]
-> Remember to run `./build-image.sh` to rebuild the Docker image after making
-> changes in the Dockerfile!
-
-[gtsam-install]: https://gtsam.org/get_started/
-
-## Contributing
-
-Please submit issues and/or pull requests for anything from reporting broken
-tooling to suggestions and improvements for code and documentation.
-
-This development status of this repository will be in alpha for the forseeable
-future. At this time, we cannot guarantee any form of support or warranty for
-users outside of our lab.
