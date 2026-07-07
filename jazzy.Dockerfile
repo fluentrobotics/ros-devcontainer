@@ -61,7 +61,7 @@ RUN apt-get update && apt-get install --yes \
 # Devcontainer
 RUN apt-get update && apt-get install --yes sudo \
     && useradd --create-home --shell /bin/bash vscode \
-    && echo "vscode ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/vscode \
+    && printf '%s\n' "vscode ALL=(root) NOPASSWD: /usr/bin/apt, /usr/bin/apt-get, /usr/bin/dpkg" > /etc/sudoers.d/vscode \
     && chmod 0440 /etc/sudoers.d/vscode
 
 # Codex sandboxing
