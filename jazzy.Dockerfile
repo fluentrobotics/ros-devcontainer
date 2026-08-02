@@ -7,6 +7,8 @@ ENV TZ=America/Detroit
 RUN apt-get update && apt-get install --yes \
     build-essential \
     clang \
+    clang-20 \
+    clangd-20 \
     clang-format \
     cmake \
     g++ \
