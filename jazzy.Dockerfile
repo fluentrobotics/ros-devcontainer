@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install --yes \
     ffmpeg \
     iproute2 \
     iputils-ping \
+    jq \
     less \
     mesa-utils \
     net-tools \

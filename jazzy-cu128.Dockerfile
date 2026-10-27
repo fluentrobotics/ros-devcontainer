@@ -48,6 +48,7 @@ RUN apt-get update && apt-get install --yes \
     curl \
     iproute2 \
     iputils-ping \
+    jq \
     less \
     mesa-utils \
     net-tools \
